@@ -11,9 +11,9 @@ public class UnitTestSorting {
         int [] unSortedArray = {6,9,2,5,1,0,4};
         int [] sortedArray =   {0,1,2,4,5,6,9};
         //Create Sort object
-        Sort sort = new Sort();
+        Sort sort1 = new Sort();
         //apply unsorted array to selectionSort.
-        sort.selectionSort(unSortedArray);
+        sort1.selectionSort(unSortedArray);
         //verify if the unsorted array is sorted by the selection sort algorithm.
         try {
             Assert.assertEquals(sortedArray, unSortedArray, "Array is not Sorted");
@@ -22,6 +22,60 @@ public class UnitTestSorting {
         }
 
         //Now implement Unit test for rest of the soring algorithm...................below
+        sort1.insertionSort(unSortedArray);
+        try {
+            Assert.assertEquals(sortedArray, unSortedArray, "Array is not Sorted");
+        }catch(Exception ex){
+            ex.getMessage();
+        }
+
+        sort1.bubbleSort(unSortedArray);
+
+        try {
+            Assert.assertEquals(sortedArray, unSortedArray, "Array is not Sorted");
+        }catch(Exception ex){
+            ex.getMessage();
+        }
+        sort1.mergeSort(unSortedArray,unSortedArray.length);
+
+        try {
+            Assert.assertEquals(sortedArray, unSortedArray, "Array is not Sorted");
+        }catch(Exception ex){
+            ex.getMessage();
+        }
+
+        sort1.heapSort(unSortedArray);
+
+        try {
+            Assert.assertEquals(sortedArray, unSortedArray, "Array is not Sorted");
+        }catch(Exception ex){
+            ex.getMessage();
+        }
+
+        sort1.quickSort(unSortedArray);
+
+        try {
+            Assert.assertEquals(sortedArray, unSortedArray, "Array is not Sorted");
+        }catch(Exception ex){
+            ex.getMessage();
+        }
+
+        sort1.shellSort(unSortedArray);
+
+        try {
+            Assert.assertEquals(sortedArray, unSortedArray, "Array is not Sorted");
+        }catch(Exception ex){
+            ex.getMessage();
+        }
+
+        sort1.bucketSort(unSortedArray);
+
+        try {
+            Assert.assertEquals(sortedArray, unSortedArray, "Array is not Sorted");
+        }catch(Exception ex){
+            ex.getMessage();
+        }
+
 
 
 

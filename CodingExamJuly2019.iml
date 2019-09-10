@@ -27,9 +27,7 @@
     </orderEntry>
     <orderEntry type="module-library">
       <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/mysql-connector-java-5.1.41-bin.jar!/" />
-        </CLASSES>
+
         <JAVADOC />
         <SOURCES />
       </library>
@@ -65,8 +63,15 @@
     </orderEntry>
     <orderEntry type="module-library">
       <library>
+
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/mysql-connector-java-6.0.6-bin.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/mysql-connector-java-8.0.17.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

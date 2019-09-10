@@ -29,7 +29,7 @@ public class CsvReader {
                     continue;
                 }
                 String[] name = line.split(cvsSplitBy);
-                roster.add(new Trainee(name[5].replace("\"", ""), name[4].replace("\"",
+                roster.add(new Trainee(name[6].replace("\"", ""), name[5].replace("\"",
                         ""), Integer.parseInt(name[10])));
 
             }
@@ -61,6 +61,12 @@ public class CsvReader {
                 System.out.print("Shame on You !-->                           ");
                 System.out.println(student.getFirstName() + " " + student.getLastName() + " " + student.getNumberOfExercisesSolved());
             }
+            int size = roster.size();
+            int total = 0;
+            for (Trainee train: roster) {
+                total+=train.getNumberOfExercisesSolved();
+            }
+            System.out.println("The average score of class: "+total/size);
         }
 
     }

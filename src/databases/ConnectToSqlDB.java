@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
+import json.parser.CccApiMainClass;
 /**
  * Created by mrahman on 04/02/18.
  */
@@ -36,8 +36,8 @@ public class ConnectToSqlDB {
         String url = prop.getProperty("MYSQLJDBC.url");
         String userName = prop.getProperty("MYSQLJDBC.userName");
         String password = prop.getProperty("MYSQLJDBC.password");
-        Class.forName(driverClass);
-        connect = DriverManager.getConnection(url,userName,password);
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        connect = DriverManager.getConnection(url,userName,"");
         System.out.println("Database is connected");
         return connect;
     }
@@ -161,15 +161,71 @@ public class ConnectToSqlDB {
         }
     }
 
+    public void insertDataFromHelpListToSqlTable(List<CccApiMainClass> list, String tableName, String columnName)
+    {
+        try {
+            connectToSqlDatabase();
+            ps = connect.prepareStatement("DROP TABLE IF EXISTS `"+tableName+"`;");
+            ps.executeUpdate();
+            ps = connect.prepareStatement("CREATE TABLE `"+tableName+"` (`source` VARCHAR(5000) ,`author` VARCHAR(5000) DEFAULT NULL, `title` VARCHAR(5000) DEFAULT NULL,`description` LONGTEXT,`url` LONGTEXT,`urlToImage` LONGTEXT,`publisherAt` LONGTEXT ,`content` LONGTEXT  );");
+            ps.executeUpdate();
+            for(CccApiMainClass st:list){
+                ps = connect.prepareStatement("INSERT INTO "+tableName+" ( "+"source,author,title,description,url,urlToImage,publisherAt,content"+" ) VALUES(?,?,?,?,?,?,?,?)");
+                ps.setObject(1,st.getSource());
+                ps.setObject(2,st.getAuthor());
+                ps.setObject(3,st.getTitle());
+                ps.setObject(4,st.getDescription());
+                ps.setObject(5,st.getUrl());
+                ps.setObject(6,st.getUrlToImage());
+                ps.setObject(7,st.getPublisherAt());
+                ps.setObject(8,st.getContent());
 
+                ps.executeUpdate();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void insertDataFromStListToSqlTable(List<Student> list, String tableName, String columnName)
+    {
+        try {
+            connectToSqlDatabase();
+            ps = connect.prepareStatement("DROP TABLE IF EXISTS `"+tableName+"`;");
+            ps.executeUpdate();
+            ps = connect.prepareStatement("CREATE TABLE `"+tableName+"` (`firstName` VARCHAR(5000) ,`lastName` VARCHAR(5000) DEFAULT NULL, `score` VARCHAR(5000) DEFAULT NULL,`id` LONGTEXT );");
+            ps.executeUpdate();
+            for(Student st:list){
+                ps = connect.prepareStatement("INSERT INTO "+tableName+" ( "+"firstName,lastName,score,id"+" ) VALUES(?,?,?,?)");
+                ps.setObject(1,st.getFirstName());
+                ps.setObject(2,st.getLastName());
+                ps.setObject(3,st.getScore());
+                ps.setObject(4,st.getId());
+                ps.executeUpdate();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
     public void insertProfileToSqlTable(String tableName, String columnName1, String columnName2)
     {
         try {
             connectToSqlDatabase();
-                ps = connect.prepareStatement("INSERT INTO "+tableName+" ( " + columnName1 + "," + columnName2 + " ) VALUES(?,?)");
-                ps.setString(1,"Ankita Sing");
-                ps.setInt(2,3590);
-                ps.executeUpdate();
+            ps = connect.prepareStatement("INSERT INTO "+tableName+" ( " + columnName1 + "," + columnName2 + " ) VALUES(?,?)");
+            ps.setString(1,"Ankita Sing");
+            ps.setInt(2,3590);
+            ps.executeUpdate();
 
 
         } catch (IOException e) {
@@ -181,7 +237,93 @@ public class ConnectToSqlDB {
         }
     }
 
-    public static List<User> readUserProfileFromSqlTable()throws IOException, SQLException, ClassNotFoundException{
+    public List<CccApiMainClass> newReadListFromSqlDB(List<CccApiMainClass> newsList, String tablename)
+            throws IOException, SQLException, ClassNotFoundException {
+        List<CccApiMainClass> list = new ArrayList<CccApiMainClass>();
+        CccApiMainClass news = new CccApiMainClass();
+        Connection conn = connectToSqlDatabase();
+
+        try {
+
+            String query = "SELECT * FROM " + tablename;
+            // create the java statement
+            Statement st = conn.createStatement();
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            // iterate through the java resultset
+            while (rs.next())
+            {
+
+                String authorName = rs.getString("author");
+                news.setAuthor(authorName);
+                String title = rs.getString("title");
+                news.setTitle(authorName);
+                String description = rs.getString("description");
+                news.setDescription(authorName);
+                String url = rs.getString("url");
+                news.setUrl(authorName);
+                String urlToImage = rs.getString("urlToImage");
+                news.setUrlToImage(urlToImage);
+
+                String publisherAt = rs.getString("publisherAt");
+                news.setPublisherAt(publisherAt);
+
+                String content = rs.getString("content");
+                news.setContent(content);
+
+
+                list.add(news);
+
+
+
+            }
+            st.close();
+        }catch (Exception e){
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return list;
+
+    }
+
+    public List<Student> readStudentListFromSqlDB(String tablename) {
+
+
+        List<Student> list = new ArrayList<Student>();
+        Student student = new Student();
+        try {
+            Connection conn = connectToSqlDatabase();
+            String query = "SELECT * FROM " + tablename;
+            // create the java statement
+            Statement st = conn.createStatement();
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            // iterate through the java resultset
+            while (rs.next()) {
+
+
+                String firstName = rs.getString("firstName");
+                student.setFirstName(firstName);
+                String lastName = rs.getString("lastName");
+                student.setLastName(lastName);
+                int score = rs.getInt("score");
+                student.setScore(score);
+                String id = rs.getString("id");
+                student.setId(id);
+                student = new Student(student.getFirstName(), student.getLastName(), student.getScore(), student.getId());
+                list.add(student);
+
+
+            }
+            st.close();
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return list;
+    }
+
+        public static List<User> readUserProfileFromSqlTable()throws IOException, SQLException, ClassNotFoundException{
         List<User> list = new ArrayList<>();
         User user = null;
         try{
